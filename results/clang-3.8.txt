@@ -1,0 +1,22 @@
+const_call(void*, unsigned long, void*):                    # @const_call(void*, unsigned long, void*)
+        testq   %rdi, %rdi
+        je      .LBB0_5
+        movq    -8(%rdi), %rax
+        movq    (%rax), %rcx
+        movl    $407377992, %esi        # imm = 0x18481848
+        andq    -8(%rcx), %rsi
+        cmpq    $407377992, (%rcx,%rsi) # imm = 0x18481848
+        jne     .LBB0_3
+        leaq    8(%rcx,%rsi), %rax
+        jmp     .LBB0_4
+.LBB0_3:                                # %select.false
+        addq    $8, %rax
+.LBB0_4:                                # %select.end
+        movq    (%rax), %rax
+        movl    $407377992, %esi        # imm = 0x18481848
+        jmpq    *%rax                   # TAILCALL
+.LBB0_5:                                # %call(void*, unsigned long, void*) [clone .exit]
+        xorl    %eax, %eax
+        retq
+
+

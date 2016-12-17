@@ -1,0 +1,21 @@
+const_call(void*, unsigned int, void*):
+        subs    ip, r0, #0
+        bxeq    lr
+        ldr     r0, [ip, #-4]
+        ldr     r3, [r0]
+        stmfd   sp!, {r4, lr}
+        ldr     r1, .L7
+        ldr     lr, [r3, #-4]
+        and     r1, r1, lr
+        ldr     r4, [r3, r1]
+        ldr     lr, .L7
+        add     r3, r3, r1
+        cmp     r4, lr
+        ldrne   r3, [r0, #4]
+        ldreq   r3, [r3, #4]
+        mov     r0, ip
+        ldr     r1, .L7
+        ldmfd   sp!, {r4, lr}
+        bx      r3
+.L7:
+        .word   407377992

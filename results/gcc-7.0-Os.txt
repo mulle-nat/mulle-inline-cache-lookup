@@ -1,0 +1,20 @@
+const_call(void*, unsigned long, void*):
+        testq   %rdi, %rdi
+        je      .L2
+        movq    -8(%rdi), %rsi
+        movq    (%rsi), %rax
+        movq    -8(%rax), %rcx
+        andl    $407377992, %ecx
+        addq    %rcx, %rax
+        cmpq    $407377992, (%rax)
+        jne     .L3
+        movq    8(%rax), %rax
+        jmp     .L4
+.L3:
+        movq    8(%rsi), %rax
+.L4:
+        movl    $407377992, %esi
+        jmp     *%rax
+.L2:
+        xorl    %eax, %eax
+        ret

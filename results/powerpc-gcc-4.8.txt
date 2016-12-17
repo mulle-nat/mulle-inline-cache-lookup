@@ -1,0 +1,28 @@
+const_call(void*, unsigned int, void*):
+        stwu 1,-16(1)
+        mr. 10,3
+        beq- 0,.L2
+        lwz 6,-4(10)
+        lis 8,0x1848
+        ori 8,8,6216
+        lwz 9,0(6)
+        lwz 7,-4(9)
+        and 7,8,7
+        lwzx 4,9,7
+        add 9,9,7
+        cmpw 7,4,8
+        bne- 7,.L3
+        lwz 9,4(9)
+.L4:
+        mtctr 9
+        lis 4,0x1848
+        mr 3,10
+        ori 4,4,6216
+        addi 1,1,16
+        bctr
+.L2:
+        addi 1,1,16
+        blr
+.L3:
+        lwz 9,4(6)
+        b .L4
