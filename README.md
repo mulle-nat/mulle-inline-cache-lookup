@@ -6,7 +6,7 @@ project name in existence.
 
 This project has a companion article that explains the background in sufficient
 detail along with code commentary any analysis:
-[mulle-objc: investigation to inline the first cache-lookup](//www.mulle-kybernetik.com/weblog/mulle_objc_inline_cache_lookup.html)
+[mulle-objc: investigation to inline mulle_objc_object_call](//www.mulle-kybernetik.com/weblog/mulle_objc_inline_skater.html)
 
 
 ## How this works
@@ -62,20 +62,3 @@ nat-call-3.s(51): 3.09 3.08 3.07
 ```
 
 Read above-mentioned article for a commentary and interpretation of it all.
-
-
-## ABI
-
-The [AMD Call convention](//refspecs.linuxbase.org/elf/x86-64-abi-0.99.pdf)
-is used by Unices and OS X. It lists the available registers for function
-call parameters. I've annotated them as they are used by *mulle-objc*:
-
-
-## Available registers
-
-* %rdi  # self
-* %rsi  # _cmd
-* %rdx  # _param
-* %rcx  # free
-* %r8   # free
-* %r9   # free
