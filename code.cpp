@@ -83,6 +83,7 @@ static inline void  *call( void *obj,
 
 
 void  *const_call( void *obj,
+                   uintptr_t unused,
                    void *parameter)
 {
    return( call( obj, 0x18481848, parameter));

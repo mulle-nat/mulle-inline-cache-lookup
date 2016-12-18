@@ -16,3 +16,5 @@ const_call(void*, unsigned long, void*):                    # @const_call(void*,
 .LBB0_1:
         xorl    %eax, %eax
         retq
+
+

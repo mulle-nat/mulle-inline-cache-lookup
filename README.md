@@ -23,6 +23,9 @@ interesting outcomes have been saved in the
 [results](//github.com/mulle-nat/mulle-inline-cache-lookup/tree/master/results)
 folder.
 
+> If you can make the output better with some obscure compiler flags,
+> please let me know in the [Issues](//github.com/mulle-nat/mulle-inline-cache-lookup/issues).
+
 To actually run a benchmark to compare these files, there is a
 [test](//github.com/mulle-nat/mulle-inline-cache-lookup/tree/master/test)
 folder. You can use
@@ -33,49 +36,15 @@ By default `run-test.sh` will benchmark all `x86_64` files in the
 results folder plus the handcoded .s files in the test folder.
 
 If you are on a different architecture, let's say PPC for instance, you could
-run a single PPC result file with `./run-test ../results/powerpc-gcc-4.8.txt`.
+run a single PPC result file with `./run-test.sh ../results/powerpc-gcc-4.8.txt`.
 
 For each file the tester will print a line like this:
 
 ```
-clang-3.8(66): 3.30 3.29 3.29
+clang-3.2;66;1,03;1,03;1,03;1,42;1,42;1,42
 ```
 
-The `66` is the number of bytes used by the call. The other three values are
-the user value from `time -p` for three runs of the benchmark. These are the
-numbers I got running the test on my 3,69 GHz Intel Core i7:
+The `66` is the number of bytes used by the machine language code. The next
+three values are the user value from `time -p` for three runs of the benchmark
+that walked the "hit" path. The other three are for the "miss" path.
 
-```
-clang-3.2(66): 3.36 3.36 3.36
-clang-3.5(66): 3.37 3.36 3.36
-clang-3.7(66): 3.29 3.29 3.29
-clang-3.8(66): 3.30 3.29 3.29
-clang-3.9(66): 3.29 3.29 3.29
-clang-3.9-Os(63): 3.53 3.53 3.52
-gcc-4.7(64): 3.61 3.61 3.61
-gcc-7.0(65): 3.35 3.35 3.36
-gcc-7.0-Os(65): 3.15 3.15 3.15
-icc-17.0(67): 3.35 3.35 3.35
-nat-call-1.s(66): 3.14 3.14 3.14
-nat-call-2.s(57): 3.08 3.08 3.08
-nat-call-3.s(51): 3.09 3.08 3.07
-```
-
-Read above-mentioned article for a commentary and interpretation of it all.
-
-
-## ABI
-
-The [AMD Call convention](//refspecs.linuxbase.org/elf/x86-64-abi-0.99.pdf)
-is used by Unices and OS X. It lists the available registers for function
-call parameters. I've annotated them as they are used by *mulle-objc*:
-
-
-## Available registers
-
-* %rdi  # self
-* %rsi  # _cmd
-* %rdx  # _param
-* %rcx  # free
-* %r8   # free
-* %r9   # free

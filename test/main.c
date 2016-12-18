@@ -1,7 +1,10 @@
+#include <assert.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 
+#define VERIFY  0   // check that handmade code does "miss" and "hit"
 
 struct cacheentry
 {
@@ -10,10 +13,12 @@ struct cacheentry
 };
 
 
+#define S_CACHE_ENTRIES 8
+
 struct cache
 {
    uintptr_t           mask;
-   struct cacheentry   entries[ 8];
+   struct cacheentry   entries[ S_CACHE_ENTRIES];
 };
 
 
@@ -30,18 +35,29 @@ struct runtime
    struct xclass   *ctab[ 8];
 };
 
-
-static void  *messenger( void *self, uintptr_t _cmd, void *_param)
+static void  *imp( void *self, uintptr_t _cmd, void *_param)
 {
+#if VERIFY
+   printf( "hit\n");
+#endif
+   return( self);
+}
+
+
+static void  *continue_call( void *self, uintptr_t _cmd, void *_param)
+{
+#if VERIFY
+   printf( "miss\n");
+#endif
    return( self);
 }
 
 
 struct cache    class0cache =
 {
-   sizeof( struct cacheentry) * 8 - 1,
+   (S_CACHE_ENTRIES - 1) * sizeof( struct cacheentry),
    {
-      { 0x18480000, messenger }  // abuse messenger again
+      { 0, 0 }
    }
 };
 
@@ -49,7 +65,7 @@ struct cache    class0cache =
 static struct xclass   class0 =
 {
    class0cache.entries,
-   messenger
+   continue_call
 };
 
 
@@ -75,18 +91,41 @@ int   main( int argc, char *argv[])
    void                     *obj;
    extern void              *call( void *obj,uintptr_t uniqueid, void *parameter);
    struct obj_with_header   space;
-
-   n = 1000;
-   if( argc == 2)
-      n = atoi( argv[ 1]);
+   struct cacheentry        *entry;
 
    // create an object with isa pointer
    space.isa = &class0;
    obj       = &space + 1;
 
+   assert( sizeof( uintptr_t) == sizeof( uint64_t));
+   assert( sizeof( struct cacheentry) == 2 * sizeof( uint64_t));
+
+   entry = &class0cache.entries[ (0x18481848 & class0cache.mask) / sizeof( *entry)];
+#if VERIFY
+   call( obj, 0x18481848, (void *) 0x1848);
+   entry->uniqueid        = 0x18481848;
+   entry->functionpointer = imp;
+   call( obj, 0x18481848, (void *) 0x1848);
+   return( 0);
+#endif
+
+   if( argc >= 2)
+      if( argv[ 1][ 0] == 'm')
+         entry = NULL;
+
+   if( entry)
+   {
+      entry->uniqueid        = 0x18481848;
+      entry->functionpointer = imp;
+   }
+
+   n = 1000;
+   if( argc >= 3)
+      n = atoi( argv[ 2]);
+
    for( i = 0; i < n; i++)
       for( j = 0; j < 1000000; j++)
-         call( obj, 0x18480000, (void *) 0x1848);  // modified to be index zero
+         call( obj, 0x18481848, (void *) 0x1848);
    return( 0);
 }
 

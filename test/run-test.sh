@@ -3,6 +3,13 @@
 # (c) 2016 Codeon GmbH, coded by Nat!
 #
 #
+
+___run()
+{
+   ( time -p ./test $1 $2 ) 2>&1 | grep user | awk '{ print $2 }' | tr '.' ','
+}
+
+
 __run()
 {
    local i
@@ -16,11 +23,27 @@ __run()
 
    textsize="`size call.o | tail -1 | awk '{print $1}'`"
 
-   echo "`basename "$i" .txt`(${textsize}):" \
-   `( time -p ./test 1000 ) 2>&1 | grep user | awk '{ print $2 }'` \
-   `( time -p ./test 1000 ) 2>&1 | grep user | awk '{ print $2 }'` \
-   `( time -p ./test 1000 ) 2>&1 | grep user | awk '{ print $2 }'`
+   local hit1
+   local hit2
+   local hit3
 
+   hit1="`___run hit 500`"
+   hit2="`___run hit 500`"
+   hit3="`___run hit 500`"
+
+   local miss1
+   local miss2
+   local miss3
+
+   miss1="`___run miss 500`"
+   miss2="`___run miss 500`"
+   miss3="`___run miss 500`"
+
+   local name
+
+   name="`basename "$i" .txt`"
+
+   echo "${name};${textsize};${hit1};${hit2};${hit3};${miss1};${miss2};${miss3}"
 }
 
 

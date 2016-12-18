@@ -1,5 +1,4 @@
-const_call(void*, void*):
-        movq      %rsi, %rdx                                    #87.1
+const_call(void*, unsigned long, void*):
         testq     %rdi, %rdi                                    #55.28
         je        ..B1.6        # Prob 5%                       #55.28
         movq      -8(%rdi), %rsi                                #65.26
@@ -13,8 +12,8 @@ const_call(void*, void*):
         movl      $407377992, %esi                              #81.12
         jmp       *%rax                                         #81.12
 ..B1.6:                         # Preds ..B1.1
-        xorl      %eax, %eax                                    #88.12
-        ret                                                     #88.12
+        xorl      %eax, %eax                                    #89.12
+        ret                                                     #89.12
 ..B1.7:                         # Preds ..B1.2
         movq      8(%rsi), %rax                                 #79.11
         jmp       ..B1.4        # Prob 100%                     #79.11
