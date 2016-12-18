@@ -6,7 +6,7 @@ project name in existence.
 
 This project has a companion article that explains the background in sufficient
 detail along with code commentary any analysis:
-[mulle-objc: investigation to inline the first cache-lookup](//www.mulle-kybernetik.com/weblog/mulle_objc_inline_cache_lookup.html)
+[mulle-objc: investigation to inline mulle_objc_object_call](//www.mulle-kybernetik.com/weblog/mulle_objc_inline_skater.html)
 
 
 ## How this works
@@ -48,3 +48,4 @@ The `66` is the number of bytes used by the machine language code. The next
 three values are the user value from `time -p` for three runs of the benchmark
 that walked the "hit" path. The other three are for the "miss" path.
 
+Read above-mentioned article for a commentary and interpretation of it all.
